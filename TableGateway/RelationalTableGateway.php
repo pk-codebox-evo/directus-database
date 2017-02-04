@@ -800,8 +800,13 @@ class RelationalTableGateway extends BaseTableGateway
 
         $depth = ArrayUtils::get($params, 'depth', null);
         if ($depth !== null) {
-            // $columns = ArrayUtils::has($params, 'columns') ? $columns : [];
-            $aliasColumns = ArrayUtils::intersection($columns, $tableSchema->getAliasColumnsName());
+            $paramColumns = ArrayUtils::get($params, 'columns', []);
+            $aliasColumns = $tableSchema->getAliasColumnsName();
+
+            if ($paramColumns) {
+                $aliasColumns = ArrayUtils::intersection($paramColumns, $aliasColumns);
+            }
+
             $results = $this->loadRelationalDataByDepth($results, (int) $depth, $aliasColumns);
         }
 
@@ -848,9 +853,9 @@ class RelationalTableGateway extends BaseTableGateway
      *
      * @return array
      */
-    protected function loadRelationalDataByDepth($result, $maxDepth = 0, array $columns = null)
+    protected function loadRelationalDataByDepth($result, $maxDepth = 0, array $columns = [])
     {
-        if ((int) $maxDepth <= 0) {
+        if ((int) $maxDepth <= 0 || !$columns) {
             return $result;
         }
 
@@ -1166,7 +1171,7 @@ class RelationalTableGateway extends BaseTableGateway
             }
 
             // Only select the fields not on the currently authenticated user group's read field blacklist
-            $relatedTableColumns = TableSchema::getAllNonAliasTableColumnNames($relatedTableName);
+            $relatedTableColumns = TableSchema::getAllTableColumnsName($relatedTableName);
             $junctionKeyRightColumn = $alias->getRelationship()->getJunctionKeyRight();
             $junctionKeyLeftColumn = $alias->getRelationship()->getJunctionKeyLeft();
             $junctionTableName = $alias->getRelationship()->getJunctionTable();
