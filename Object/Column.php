@@ -442,6 +442,20 @@ class Column implements \ArrayAccess, Arrayable, \JsonSerializable
     }
 
     /**
+     * Set whether the column is nullable or not
+     *
+     * @see Column::setNullable
+     *
+     * @param $nullable
+     *
+     * @return Column
+     */
+    public function setIsNullable($nullable)
+    {
+        return $this->setNullable($nullable === 'YES');
+    }
+
+    /**
      * Get whether the column is nullable or not
      *
      * @return bool
@@ -449,6 +463,18 @@ class Column implements \ArrayAccess, Arrayable, \JsonSerializable
     public function getNullable()
     {
         return $this->nullable;
+    }
+
+    /**
+     * Get whether the column is nullable or not
+     *
+     * @see Column::getNullable
+     *
+     * @return bool
+     */
+    public function getIsNullable()
+    {
+        return $this->getNullable();
     }
 
     /**
