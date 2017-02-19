@@ -1094,7 +1094,7 @@ class RelationalTableGateway extends BaseTableGateway
                 }
 
                 if (count($values) > 0) {
-                    $query->whereIn($this->primaryKeyFieldName, $values);
+                    $query->whereIn($column, $values);
                 }
             }
         }
